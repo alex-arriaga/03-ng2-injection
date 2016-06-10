@@ -1,16 +1,52 @@
 import { Component, OnInit } from '@angular/core';
+/**  1 importar el servicio*/
+import { MovimientosService, Movimiento } from '../shared/';
 
 @Component({
   moduleId: module.id,
-  selector: 'app-movimiento',
+  selector: 'movimiento',
   templateUrl: 'movimiento.component.html',
-  styleUrls: ['movimiento.component.css']
+  styleUrls: ['movimiento.component.css'],
+  providers: [MovimientosService] // 2 registrar el sevicio en la lista de providers
+  // OJO: cada vez que inyecto un servicio se crea una nueva instancia
+  // si quiero que sea único debo inyectarlo una sóla vez
+  // por ejemplo en el componente raiz
 })
+
 export class MovimientoComponent implements OnInit {
+  // nos quedamos con las propiedades exclusivas de la vista
+  movimiento: Movimiento
+  sentidoOrden: number = 1
 
-  constructor() {}
 
-  ngOnInit() {
+  /** 3 declarar el servicio en constructor para su inyección*/ 
+  constructor(public movimientosService: MovimientosService) {
+    // al declararlo como público este parámetro es accesible desde la vista
   }
 
+  ngOnInit() {
+    this.movimiento = {
+      _id: new Date().toDateString(),
+      tipo: "Ingreso",
+      categoria: "Nómina",
+      fecha: new Date(),
+      importe: 0
+    }
+  }
+
+  guardarMovimiento() {
+    // 4 usar servicio
+    this.movimientosService.guardarMovimiento(this.movimiento)
+  }
+
+  ordenarPor(campo: string) {
+    this.sentidoOrden = -1 * this.sentidoOrden
+    this.movimientosService.ordenarPor(campo, this.sentidoOrden)
+  }
+
+  // TODO: mover fuciones de utilidad a una clase inyectable en un fichero común  
+  fecha(cadena) {
+    return new Date(cadena)
+  }
 }
+
