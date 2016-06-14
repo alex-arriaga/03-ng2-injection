@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 /**  1 importar el servicio*/
 import { MovimientosService, Movimiento } from '../shared/';
 
+import { provide } from '@angular/core';
+
+
+
 @Component({
   moduleId: module.id,
   selector: 'movimiento',
@@ -11,6 +15,17 @@ import { MovimientosService, Movimiento } from '../shared/';
   // OJO: cada vez que inyecto un servicio se crea una nueva instancia
   // si quiero que sea único debo inyectarlo una sóla vez
   // por ejemplo en el componente raiz
+  /*providers: [
+    provide(MovimientosService, { useClass: MovimientosService }),
+    provide(Movimiento,{useValue:{
+      _id: new Date().toDateString(),
+      tipo: "Ingreso",
+      categoria: "Nómina",
+      fecha: new Date(),
+      importe: 10
+    }
+    })
+  ]*/
 })
 
 export class MovimientoComponent implements OnInit {
@@ -22,16 +37,17 @@ export class MovimientoComponent implements OnInit {
   /** 3 declarar el servicio en constructor para su inyección*/ 
   constructor(public movimientosService: MovimientosService) {
     // al declararlo como público este parámetro es accesible desde la vista
+    //, public movimiento:Movimiento
   }
 
   ngOnInit() {
-    this.movimiento = {
-      _id: new Date().toDateString(),
-      tipo: "Ingreso",
-      categoria: "Nómina",
-      fecha: new Date(),
-      importe: 0
-    }
+     this.movimiento = {
+       _id: new Date().toDateString(),
+       tipo: "Ingreso",
+       categoria: "Nómina",
+       fecha: new Date(),
+       importe: 0
+     }
   }
 
   guardarMovimiento() {
